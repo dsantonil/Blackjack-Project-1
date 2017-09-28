@@ -5,19 +5,78 @@ public class Main
 {
     public static void main(String[] args)
     {
-        int userPoints = playerCards();   // the user is given a card, resulting in a point value from 1-10
 
-        System.out.println("Your hand is: " + userPoints);
+        Scanner scnr = new Scanner(System.in);
+        int playerChoice;
+        int userHand = 0;
+        int getPlayerHand;
+        int dealerHand;
+        int getDealerHand;
+        int playerWins = 0;
+        int dealerWins = 0;
+        int numberTies = 0;
+        int totalGamesPlayed;
+        int percentGamesWon;
+        int gameNumber = 1;
 
-        playerMenu();
+        boolean gameLoop = true;    // boolean value to keep game loop going (enabling consecutive games)
 
+        while(gameLoop)
+        {
+            System.out.println("START GAME #" + gameNumber);
+            userHand = initPlayerCards();   // the user is given a card, resulting in a point value from 1-10
+            getPlayerHand = userHand;
+            System.out.println("Your hand is: " + getPlayerHand);
+
+            boolean menuLoop = true;    // used to keep the menu option looping
+
+            while(menuLoop)
+            {
+                playerMenu();
+                playerChoice = scnr.nextInt();
+
+                while(playerChoice == 1)
+                {
+                    userHand = initPlayerCards();
+                    getPlayerHand = getPlayerHand + userHand;
+                    System.out.println("Your hand is " + getPlayerHand);
+                    break;
+                }
+
+                while(playerChoice == 2)
+                {
+                    dealerHand = dealerCards();
+                    getDealerHand = dealerHand;
+                    break;
+                }
+
+                while(playerChoice == 3)
+                {
+                    System.out.println("Number of Player wins: " + playerWins);
+                    System.out.println("Number of Dealer wins: " + dealerWins);
+                    System.out.println("Number of tie games: " + numberTies);
+                    System.out.println("Total # of games played is: " + gameNumber);
+                    percentGamesWon = (playerWins / gameNumber);
+                    System.out.println("Percentage of Player wins: " + (double)percentGamesWon);
+                    break;
+                }
+
+                while(playerChoice == 4)
+                {
+                    gameLoop = false;
+                    menuLoop = false;
+                    break;
+                }
+            }
+            gameNumber++;
+        }
+        System.out.println("Thanks for playing!");
     }
 
-
-    static int playerCards ()
+    static int initPlayerCards ()
     {
 
-        //  following code determines what card the player is dealt and the point value assigned to it
+        //  following code determines what card the player is initially dealt and the point value assigned to it
 
         Random randGen = new Random();
 
@@ -67,5 +126,18 @@ public class Main
         System.out.println("4. Exit");
         System.out.print("Choose an option: ");
 
+    }
+
+    static int dealerCards()
+    {
+        Random dealerGen = new Random();
+
+        int masterHand = 0;
+        int dealerDealt = dealerGen.nextInt(11) + 16;
+
+        System.out.println("Dealer's hand: " + dealerDealt);
+        dealerDealt = masterHand;
+
+        return(masterHand);
     }
 }
