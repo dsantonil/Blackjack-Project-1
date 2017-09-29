@@ -10,8 +10,7 @@ public class Main
         int playerChoice;
         int userHand;   // value of points from the playerCards method
         int getPlayerHand;  // total amount of points the player has
-        int dealerHand;
-        int getDealerHand = 0;
+        int getDealerHand = 0;  // total amount of points the dealer has
         int playerWins = 0;
         int dealerWins = 0;
         int numberTies = 0;
@@ -20,9 +19,12 @@ public class Main
 
         boolean gameLoop = true;    // boolean value to keep game loop going (enabling consecutive games)
 
+        // code for game
+
         while(gameLoop)
         {
             System.out.println("START GAME #" + gameNumber);
+            System.out.println(" ");
             userHand = playerCards();   // the user is given a card, resulting in a point value from 1-10
             getPlayerHand = userHand;
             System.out.println("Your hand is: " + getPlayerHand);
@@ -33,6 +35,8 @@ public class Main
             {
                 System.out.println(" ");
                 playerMenu();
+
+                // error catching code to allow program to accept any integer input
 
                 try
                 {
@@ -67,10 +71,13 @@ public class Main
                         int dealerDealt = dealerGen.nextInt(11) + 16;
                         getDealerHand = dealerDealt;
                         System.out.println("Dealer's hand is " + getDealerHand);
+                        System.out.println("Your hand is " + getPlayerHand);
+
+                        // conditions to end/start new game once player chooses option #2
 
                         if(getDealerHand == 21)
                         {
-                            System.out.println("Dealer has BLACKJACK! You lose :(");
+                            System.out.println("Dealer wins!");
                             System.out.println(" ");
                             dealerWins = dealerWins + 1;
                             menuLoop = false;
@@ -78,7 +85,7 @@ public class Main
 
                         else if(getDealerHand > 21)
                         {
-                            System.out.println("Dealer bust! You win!");
+                            System.out.println("You win!");
                             System.out.println(" ");
                             playerWins = playerWins + 1;
                             menuLoop = false;
@@ -112,10 +119,14 @@ public class Main
 
                     while(playerChoice == 3)
                     {
+
+                        // code for statistics menu choice
+
                         System.out.println("Number of Player wins: " + playerWins);
                         System.out.println("Number of Dealer wins: " + dealerWins);
                         System.out.println("Number of tie games: " + numberTies);
                         System.out.println("Total # of games played is: " + --gameNumber);
+                        // decreased game number to account for games completed, not just games played/being played
 
                         // exception for when the player tries to access percentage before finishing the first game
                         try
@@ -134,14 +145,17 @@ public class Main
                         }
                         percentGamesWon = ((double)playerWins / (double)gameNumber) * 100;
                         System.out.println("Percentage of Player wins: " + percentGamesWon + "%");
-                        gameNumber++;
+                        gameNumber++;   // added 1 back to game number to account for the subtraction done previously
                         break;
                     }
 
                     while(playerChoice == 4)
                     {
-                        gameLoop = false;
+                        gameLoop = false;   // breaks the game loop, thus stopping the game
                         menuLoop = false;
+
+                        // setting both boolean values to false at this point enables the game to stop
+
                         break;
                     }
 
@@ -167,6 +181,9 @@ public class Main
 
                 catch (java.util.InputMismatchException UHH_OH)
                 {
+
+                    // following catch block allows program to accept any input besides integers
+
                     System.out.println("Invalid input!");
                     System.out.println("Please enter an integer value between 1 and 4.");
                     scnr.nextLine();
@@ -174,6 +191,9 @@ public class Main
 
                 catch (Exception excpt)
                 {
+
+                    // catch block for thrown exceptions regarding invalid integer inputs
+
                     System.out.println(excpt.getMessage());
                     System.out.println("Please enter an integer value between 1 and 4.");
                     scnr.nextLine();
@@ -181,7 +201,7 @@ public class Main
 
             }
 
-            gameNumber++;
+            gameNumber++;   // adds 1 to the game number, allowing for consecutive games to be titled
         }
         System.out.println("Thanks for playing!");
     }
@@ -189,7 +209,7 @@ public class Main
     static int playerCards ()
     {
 
-        //  following code determines what card the player is initially dealt and the point value assigned to it
+        //  following code determines what card the player is dealt and the point value assigned to it
 
         Random randGen = new Random();
 
@@ -240,6 +260,5 @@ public class Main
         System.out.print("Choose an option: ");
 
     }
-
 
 }
