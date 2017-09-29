@@ -33,124 +33,154 @@ public class Main
             {
                 System.out.println(" ");
                 playerMenu();
-                playerChoice = scnr.nextInt();
-                System.out.println(" ");
 
-                // loops for player choices
-
-                while(playerChoice == 1)
+                try
                 {
-                    userHand = playerCards();
-                    getPlayerHand = getPlayerHand + userHand;
-                    System.out.println("Your hand is " + getPlayerHand);
-                    break;
-                }
+                    playerChoice = scnr.nextInt();
 
-                while(playerChoice == 2)
-                {
-                    Random dealerGen = new Random();
-
-                    int dealerDealt = dealerGen.nextInt(11) + 16;
-                    getDealerHand = dealerDealt;
-                    System.out.println("Dealer's hand is " + getDealerHand);
-
-                    if(getDealerHand == 21)
+                    if(playerChoice <= 0)
                     {
-                        System.out.println("Dealer has BLACKJACK! You lose :(");
-                        System.out.println(" ");
-                        dealerWins = dealerWins + 1;
-                        menuLoop = false;
+                        throw new Exception("Invalid input!");
                     }
 
-                    else if(getDealerHand > 21)
+                    else if(playerChoice >= 5)
                     {
-                        System.out.println("Dealer bust! You win!");
-                        System.out.println(" ");
-                        playerWins = playerWins + 1;
-                        menuLoop = false;
+                        throw new Exception("Invalid input!");
                     }
 
-                    else if(getDealerHand == getPlayerHand)
+                    System.out.println(" ");
+
+                    // loops for player choices
+
+                    while(playerChoice == 1)
                     {
-                        System.out.println("It's a tie! No one wins!");
-                        System.out.println(" ");
-                        numberTies = numberTies + 1;
-                        menuLoop = false;
+                        userHand = playerCards();
+                        getPlayerHand = getPlayerHand + userHand;
+                        System.out.println("Your hand is " + getPlayerHand);
+                        break;
                     }
 
-                    else if(getDealerHand > getPlayerHand)
+                    while(playerChoice == 2)
                     {
-                        System.out.println("Dealer wins!");
-                        System.out.println(" ");
-                        dealerWins = dealerWins + 1;
-                        menuLoop = false;
-                    }
+                        Random dealerGen = new Random();
 
-                    else if(getPlayerHand > getDealerHand)
-                    {
-                        System.out.println("You win!");
-                        System.out.println(" ");
-                        playerWins = playerWins + 1;
-                        menuLoop = false;
-                    }
-                    break;
-                }
+                        int dealerDealt = dealerGen.nextInt(11) + 16;
+                        getDealerHand = dealerDealt;
+                        System.out.println("Dealer's hand is " + getDealerHand);
 
-                while(playerChoice == 3)
-                {
-                    System.out.println("Number of Player wins: " + playerWins);
-                    System.out.println("Number of Dealer wins: " + dealerWins);
-                    System.out.println("Number of tie games: " + numberTies);
-                    System.out.println("Total # of games played is: " + --gameNumber);
-
-                    try
-                    {
-                        if(gameNumber == 0)
+                        if(getDealerHand == 21)
                         {
-                            throw new Exception("Insufficient data!");
+                            System.out.println("Dealer has BLACKJACK! You lose :(");
+                            System.out.println(" ");
+                            dealerWins = dealerWins + 1;
+                            menuLoop = false;
                         }
+
+                        else if(getDealerHand > 21)
+                        {
+                            System.out.println("Dealer bust! You win!");
+                            System.out.println(" ");
+                            playerWins = playerWins + 1;
+                            menuLoop = false;
+                        }
+
+                        else if(getDealerHand == getPlayerHand)
+                        {
+                            System.out.println("It's a tie! No one wins!");
+                            System.out.println(" ");
+                            numberTies = numberTies + 1;
+                            menuLoop = false;
+                        }
+
+                        else if(getDealerHand > getPlayerHand)
+                        {
+                            System.out.println("Dealer wins!");
+                            System.out.println(" ");
+                            dealerWins = dealerWins + 1;
+                            menuLoop = false;
+                        }
+
+                        else if(getPlayerHand > getDealerHand)
+                        {
+                            System.out.println("You win!");
+                            System.out.println(" ");
+                            playerWins = playerWins + 1;
+                            menuLoop = false;
+                        }
+                        break;
                     }
-                    catch (Exception excpt)
+
+                    while(playerChoice == 3)
                     {
-                        System.out.println(excpt.getMessage());
-                        System.out.println("Percentage of player wins unavailable until first game is complete!");
+                        System.out.println("Number of Player wins: " + playerWins);
+                        System.out.println("Number of Dealer wins: " + dealerWins);
+                        System.out.println("Number of tie games: " + numberTies);
+                        System.out.println("Total # of games played is: " + --gameNumber);
+
+                        // exception for when the player tries to access percentage before finishing the first game
+                        try
+                        {
+                            if(gameNumber == 0)
+                            {
+                                throw new Exception("Insufficient data!");
+                            }
+                        }
+                        catch (Exception excpt)
+                        {
+                            System.out.println(excpt.getMessage());
+                            System.out.println("Percentage of player wins unavailable until first game is complete!");
+                            gameNumber++;
+                            break;
+                        }
+                        percentGamesWon = ((double)playerWins / (double)gameNumber) * 100;
+                        System.out.println("Percentage of Player wins: " + percentGamesWon + "%");
                         gameNumber++;
                         break;
                     }
-                    percentGamesWon = ((double)playerWins / (double)gameNumber) * 100;
-                    System.out.println("Percentage of Player wins: " + percentGamesWon + "%");
-                    gameNumber++;
-                    break;
+
+                    while(playerChoice == 4)
+                    {
+                        gameLoop = false;
+                        menuLoop = false;
+                        break;
+                    }
+
+                    // conditions to end/start next game if player has not picked option #2
+
+                    if(getPlayerHand == 21)
+                    {
+                        System.out.println("BLACKJACK! You win!");
+                        System.out.println(" ");
+                        playerWins = playerWins + 1;
+                        menuLoop = false;
+                    }
+
+                    else if(getPlayerHand > 21)
+                    {
+                        System.out.println("You exceeded 21! You lose :(");
+                        System.out.println(" ");
+                        dealerWins = dealerWins + 1;
+                        menuLoop = false;
+                    }
+
                 }
 
-                while(playerChoice == 4)
+                catch (java.util.InputMismatchException UHH_OH)
                 {
-                    gameLoop = false;
-                    menuLoop = false;
-                    break;
+                    System.out.println("Invalid input!");
+                    System.out.println("Please enter an integer value between 1 and 4.");
+                    scnr.nextLine();
                 }
 
-                // conditions to end/start next game if player has not picked option #2
-
-                if(getPlayerHand == 21)
+                catch (Exception excpt)
                 {
-                    System.out.println("BLACKJACK! You win!");
-                    System.out.println(" ");
-                    playerWins = playerWins + 1;
-                    menuLoop = false;
-                }
-
-                else if(getPlayerHand > 21)
-                {
-                    System.out.println("You exceeded 21! You lose :(");
-                    System.out.println(" ");
-                    dealerWins = dealerWins + 1;
-                    menuLoop = false;
+                    System.out.println(excpt.getMessage());
+                    System.out.println("Please enter an integer value between 1 and 4.");
+                    scnr.nextLine();
                 }
 
             }
-            getDealerHand = 0;
-            getPlayerHand = 0;
+
             gameNumber++;
         }
         System.out.println("Thanks for playing!");
