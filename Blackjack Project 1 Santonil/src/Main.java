@@ -8,15 +8,14 @@ public class Main
 
         Scanner scnr = new Scanner(System.in);
         int playerChoice;
-        int userHand = 0;
-        int getPlayerHand;
+        int userHand;   // value of points from the playerCards method
+        int getPlayerHand;  // total amount of points the player has
         int dealerHand;
-        int getDealerHand;
+        int getDealerHand = 0;
         int playerWins = 0;
         int dealerWins = 0;
         int numberTies = 0;
-        int totalGamesPlayed;
-        int percentGamesWon;
+        double percentGamesWon;
         int gameNumber = 1;
 
         boolean gameLoop = true;    // boolean value to keep game loop going (enabling consecutive games)
@@ -24,7 +23,7 @@ public class Main
         while(gameLoop)
         {
             System.out.println("START GAME #" + gameNumber);
-            userHand = initPlayerCards();   // the user is given a card, resulting in a point value from 1-10
+            userHand = playerCards();   // the user is given a card, resulting in a point value from 1-10
             getPlayerHand = userHand;
             System.out.println("Your hand is: " + getPlayerHand);
 
@@ -32,12 +31,16 @@ public class Main
 
             while(menuLoop)
             {
+                System.out.println(" ");
                 playerMenu();
                 playerChoice = scnr.nextInt();
+                System.out.println(" ");
+
+                // loops for player choices
 
                 while(playerChoice == 1)
                 {
-                    userHand = initPlayerCards();
+                    userHand = playerCards();
                     getPlayerHand = getPlayerHand + userHand;
                     System.out.println("Your hand is " + getPlayerHand);
                     break;
@@ -45,8 +48,51 @@ public class Main
 
                 while(playerChoice == 2)
                 {
-                    dealerHand = dealerCards();
-                    getDealerHand = dealerHand;
+                    Random dealerGen = new Random();
+
+                    int dealerDealt = dealerGen.nextInt(11) + 16;
+                    getDealerHand = dealerDealt;
+                    System.out.println("Dealer's hand is " + getDealerHand);
+
+                    if(getDealerHand == 21)
+                    {
+                        System.out.println("Dealer has BLACKJACK! You lose :(");
+                        System.out.println(" ");
+                        dealerWins = dealerWins + 1;
+                        menuLoop = false;
+                    }
+
+                    else if(getDealerHand > 21)
+                    {
+                        System.out.println("Dealer bust! You win!");
+                        System.out.println(" ");
+                        playerWins = playerWins + 1;
+                        menuLoop = false;
+                    }
+
+                    else if(getDealerHand == getPlayerHand)
+                    {
+                        System.out.println("It's a tie! No one wins!");
+                        System.out.println(" ");
+                        numberTies = numberTies + 1;
+                        menuLoop = false;
+                    }
+
+                    else if(getDealerHand > getPlayerHand)
+                    {
+                        System.out.println("Dealer wins!");
+                        System.out.println(" ");
+                        dealerWins = dealerWins + 1;
+                        menuLoop = false;
+                    }
+
+                    else if(getPlayerHand > getDealerHand)
+                    {
+                        System.out.println("You win!");
+                        System.out.println(" ");
+                        playerWins = playerWins + 1;
+                        menuLoop = false;
+                    }
                     break;
                 }
 
@@ -55,9 +101,25 @@ public class Main
                     System.out.println("Number of Player wins: " + playerWins);
                     System.out.println("Number of Dealer wins: " + dealerWins);
                     System.out.println("Number of tie games: " + numberTies);
-                    System.out.println("Total # of games played is: " + gameNumber);
-                    percentGamesWon = (playerWins / gameNumber);
-                    System.out.println("Percentage of Player wins: " + (double)percentGamesWon);
+                    System.out.println("Total # of games played is: " + --gameNumber);
+
+                    try
+                    {
+                        if(gameNumber == 0)
+                        {
+                            throw new Exception("Insufficient data!");
+                        }
+                    }
+                    catch (Exception excpt)
+                    {
+                        System.out.println(excpt.getMessage());
+                        System.out.println("Percentage of player wins unavailable until first game is complete!");
+                        gameNumber++;
+                        break;
+                    }
+                    percentGamesWon = ((double)playerWins / (double)gameNumber) * 100;
+                    System.out.println("Percentage of Player wins: " + percentGamesWon + "%");
+                    gameNumber++;
                     break;
                 }
 
@@ -67,13 +129,34 @@ public class Main
                     menuLoop = false;
                     break;
                 }
+
+                // conditions to end/start next game if player has not picked option #2
+
+                if(getPlayerHand == 21)
+                {
+                    System.out.println("BLACKJACK! You win!");
+                    System.out.println(" ");
+                    playerWins = playerWins + 1;
+                    menuLoop = false;
+                }
+
+                else if(getPlayerHand > 21)
+                {
+                    System.out.println("You exceeded 21! You lose :(");
+                    System.out.println(" ");
+                    dealerWins = dealerWins + 1;
+                    menuLoop = false;
+                }
+
             }
+            getDealerHand = 0;
+            getPlayerHand = 0;
             gameNumber++;
         }
         System.out.println("Thanks for playing!");
     }
 
-    static int initPlayerCards ()
+    static int playerCards ()
     {
 
         //  following code determines what card the player is initially dealt and the point value assigned to it
@@ -128,16 +211,5 @@ public class Main
 
     }
 
-    static int dealerCards()
-    {
-        Random dealerGen = new Random();
 
-        int masterHand = 0;
-        int dealerDealt = dealerGen.nextInt(11) + 16;
-
-        System.out.println("Dealer's hand: " + dealerDealt);
-        dealerDealt = masterHand;
-
-        return(masterHand);
-    }
 }
